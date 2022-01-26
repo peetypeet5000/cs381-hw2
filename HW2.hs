@@ -82,4 +82,14 @@ cyc len = [(x,((x `mod` len) + 1)) | x <- [1..len]]
 
 -- Exercise 3 - Data Types
 
--- a) 
+-- a) compute the width of a shape
+width :: Shape -> Length
+width (Pt a) = 0
+width (Circle a b) = b * 2
+width (Rect a b c) = max b c
+
+-- b) compute the boudning box of a shape
+bbox :: Shape -> BBox
+bbox (Pt a) = ((a,a),(a,a))
+bbox (Circle (x,y), r) = ((x-r, y-r), (x+r, y+r))
+bbox (Rect (x,y) l w) = ((x-l,y-l),(x+w,y+w))
