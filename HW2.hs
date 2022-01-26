@@ -1,8 +1,13 @@
+-- Name: Peter LaMontagne
+-- Date: 1/25/22
+-- CS 381
 import HW2types
 
 -- Exercise 1 - Lists
 
 -- a) Insert an element into a multiset
+-- searches bag for existing item, otherwise
+-- adds a new item if not found
 ins :: Eq a => a -> Bag a -> Bag a
 ins a [] = [(a, 1)]
 ins a ((i, n):xs)
@@ -10,6 +15,8 @@ ins a ((i, n):xs)
     | otherwise = (i, n): ins a xs
 
 -- b) remove a single element from a multiset
+-- similarly searches for an existing item and decrements
+-- it or removes it entierly.
 del :: Eq a => a -> Bag a -> Bag a
 del a [] = []
 del a ((i, n):xs)
@@ -18,11 +25,14 @@ del a ((i, n):xs)
     | otherwise = (i, n): del a xs
 
 -- c) take a list of values and produce a multiset
+-- calls insert of each item in the list
 bag :: Eq a => [a] -> Bag a 
 bag [] = []
 bag (x:xs) = ins x (bag xs)
 
 -- d) determine if one subbag is contained in another
+-- keeps checking and removes item if its found
+-- so that an empty list is the true base case
 subbag :: Eq a => Bag a -> Bag a -> Bool
 subbag [] [] = True
 subbag [] _ = True
@@ -39,6 +49,7 @@ findTuple a ((i, n):xs)
     | otherwise = findTuple a xs
 
 -- e) tests wether a bag is a set (only one of each)
+-- loops thru each item and checks if count is 1
 isSet :: Eq a => Bag a -> Bool
 isSet [] = True
 isSet ((i, n):xs) 
@@ -47,6 +58,7 @@ isSet ((i, n):xs)
 
 
 -- f) compute the number of elements in a bag
+-- similar to above but adds all the counts
 size :: Bag a -> Int
 size [] = 0
 size ((i, n):xs) = n + size xs
@@ -58,21 +70,29 @@ size ((i, n):xs) = n + size xs
 -- Exercise 2 - Graphs
 
 -- a) return the list of nodes contained in a graph
+-- appends all the elements in each point to a list
+-- then normalizes it
 nodes :: Graph -> [Node]
 nodes [] = []
 nodes (x:xs) = norm(fst x : snd x  : nodes xs)
 
 -- b) compute list of sucessors for node in given graph
+-- list comprehension to get second element in an edge
+-- iff the first element is a predecessor node
 suc :: Node -> Graph -> [Node]
 suc _ [] = []
 suc node graph = [snd x | x <- graph, fst x == node]
 
 -- c) detach a node from the graph
+-- list comprehension for each point in the graph
+-- if either of its nodes are not the node to remove
 detach :: Node -> Graph -> Graph
 detach _ [] = []
 detach node graph = [x | x <- graph, fst x /= node, snd x /= node]
 
 -- d) create a cycle of any given number
+-- list comprehension for each number in the range
+-- with a modulus to make the last one be 1
 cyc :: Int -> Graph
 cyc 0 = []
 cyc len = [(x,((x `mod` len) + 1)) | x <- [1..len]]
@@ -101,6 +121,8 @@ minX (Circle (x,y) r) = x-r
 minX (Rect (x,y) l w) = x
 
 -- d) move the position of a shape by a given vector 
+-- uses helper function to add to the point
+-- component of each shape
 move :: Shape -> Point -> Shape
 move (Pt pt) vec = Pt(addPt pt vec)
 move (Circle pt r) vec = (Circle (addPt pt vec) r) 
