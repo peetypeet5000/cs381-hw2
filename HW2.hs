@@ -90,6 +90,22 @@ width (Rect a b c) = max b c
 
 -- b) compute the boudning box of a shape
 bbox :: Shape -> BBox
-bbox (Pt a) = ((a,a),(a,a))
-bbox (Circle (x,y), r) = ((x-r, y-r), (x+r, y+r))
-bbox (Rect (x,y) l w) = ((x-l,y-l),(x+w,y+w))
+bbox (Pt (x,y)) = ((x,y),(x,y))
+bbox (Circle (x,y) r) = ((x-r, y-r), (x+r, y+r))
+bbox (Rect (x,y) l w) = ((x,y),(x+l,y+w))
+
+-- c) compute the minimum x coordinate of a shape
+minX :: Shape -> Number
+minX (Pt (x,y)) = x
+minX (Circle (x,y) r) = x-r
+minX (Rect (x,y) l w) = x
+
+-- d) move the position of a shape by a given vector 
+move :: Shape -> Point -> Shape
+move (Pt pt) vec = Pt(addPt pt vec)
+move (Circle pt r) vec = (Circle (addPt pt vec) r) 
+move (Rect pt l w) vec = (Rect (addPt pt vec) l w) 
+
+-- helper function to add two points
+addPt :: Point -> Point -> Point
+addPt (x,y) (x',y') = (x+x',y+y')
