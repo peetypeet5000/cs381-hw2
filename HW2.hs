@@ -1,6 +1,6 @@
 import HW2types
 
--- Question 1
+-- Exercise 1 - Lists
 
 -- a) Insert an element into a multiset
 ins :: Eq a => a -> Bag a -> Bag a
@@ -49,4 +49,37 @@ isSet ((i, n):xs)
 -- f) compute the number of elements in a bag
 size :: Bag a -> Int
 size [] = 0
-size ((i, n):xs) = n + size xs 
+size ((i, n):xs) = n + size xs
+
+
+
+
+
+-- Exercise 2 - Graphs
+
+-- a) return the list of nodes contained in a graph
+nodes :: Graph -> [Node]
+nodes [] = []
+nodes (x:xs) = norm(fst x : snd x  : nodes xs)
+
+-- b) compute list of sucessors for node in given graph
+suc :: Node -> Graph -> [Node]
+suc _ [] = []
+suc node graph = [snd x | x <- graph, fst x == node]
+
+-- c) detach a node from the graph
+detach :: Node -> Graph -> Graph
+detach _ [] = []
+detach node graph = [x | x <- graph, fst x /= node, snd x /= node]
+
+-- d) create a cycle of any given number
+cyc :: Int -> Graph
+cyc 0 = []
+cyc len = [(x,((x `mod` len) + 1)) | x <- [1..len]]
+
+
+
+
+-- Exercise 3 - Data Types
+
+-- a) 
